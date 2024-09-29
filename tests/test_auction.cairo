@@ -116,7 +116,6 @@ fn test_get_highest_bidder() {
     assert(bid_value_strk != bid_value_btc, 'Bid should be 200');
     assert(bid_value_eth != bid_value_btc, 'Bid should be 200');
 }
-
 // #[test]
 // #[feature("safe_dispatcher")]
 // fn test_cannot_increase_balance_with_zero_value() {
@@ -134,3 +133,4 @@ fn test_get_highest_bidder() {
 //         }
 //     };
 // }
+
