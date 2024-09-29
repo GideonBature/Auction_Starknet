@@ -1,11 +1,12 @@
 use starknet::ContractAddress;
+// use array::ArrayTrait;
 
 use snforge_std::{declare, ContractClassTrait, DeclareResultTrait};
 
-use auction::IHelloStarknetSafeDispatcher;
-use auction::IHelloStarknetSafeDispatcherTrait;
-use auction::IHelloStarknetDispatcher;
-use auction::IHelloStarknetDispatcherTrait;
+use super::IAuctionSafeDispatcher;
+use super::IAuctionSafeDispatcherTrait;
+use super::IAuctionDispatcher;
+use super::IAuctionDispatcherTrait;
 
 fn deploy_contract(name: ByteArray) -> ContractAddress {
     let contract = declare(name).unwrap().contract_class();
@@ -14,34 +15,46 @@ fn deploy_contract(name: ByteArray) -> ContractAddress {
 }
 
 #[test]
-fn test_increase_balance() {
-    let contract_address = deploy_contract("HelloStarknet");
+fn test_register_item() {
+    let contract_address = deploy_contract("Auction");
 
-    let dispatcher = IHelloStarknetDispatcher { contract_address };
+    let dispatcher = IAuctionDispatcher { contract_address };
 
-    let balance_before = dispatcher.get_balance();
-    assert(balance_before == 0, 'Invalid balance');
+    let before_register = dispatcher.is_registered("hello");
+    assert(before_register == false, 'Item should not be registered');
 
-    dispatcher.increase_balance(42);
+    dispatcher.register_item("hello");
 
-    let balance_after = dispatcher.get_balance();
-    assert(balance_after == 42, 'Invalid balance');
+    let after_register = dispatcher.is_registered("hello");
+    assert(after_register == true, 'Item should be registered');
 }
 
 #[test]
-#[feature("safe_dispatcher")]
-fn test_cannot_increase_balance_with_zero_value() {
-    let contract_address = deploy_contract("HelloStarknet");
+fn test_register_item_with_empty_name() {
+    let contract_address = deploy_contract("Auction");
 
-    let safe_dispatcher = IHelloStarknetSafeDispatcher { contract_address };
+    let dispatcher = IAuctionDispatcher { contract_address };
 
-    let balance_before = safe_dispatcher.get_balance().unwrap();
-    assert(balance_before == 0, 'Invalid balance');
+    let register = dispatcher.register_item("");
 
-    match safe_dispatcher.increase_balance(0) {
-        Result::Ok(_) => core::panic_with_felt252('Should have panicked'),
-        Result::Err(panic_data) => {
-            assert(*panic_data.at(0) == 'Amount cannot be 0', *panic_data.at(0));
-        }
-    };
+    let test = dispatcher.is_registered("");
+    assert(test == false, 'Name cannot be empty');
 }
+
+// #[test]
+// #[feature("safe_dispatcher")]
+// fn test_cannot_increase_balance_with_zero_value() {
+//     let contract_address = deploy_contract("HelloStarknet");
+
+//     let safe_dispatcher = IHelloStarknetSafeDispatcher { contract_address };
+
+//     let balance_before = safe_dispatcher.get_balance().unwrap();
+//     assert(balance_before == 0, 'Invalid balance');
+
+//     match safe_dispatcher.increase_balance(0) {
+//         Result::Ok(_) => core::panic_with_felt252('Should have panicked'),
+//         Result::Err(panic_data) => {
+//             assert(*panic_data.at(0) == 'Amount cannot be 0', *panic_data.at(0));
+//         }
+//     };
+// }

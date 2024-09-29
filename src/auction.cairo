@@ -60,6 +60,7 @@ pub mod Auction {
             let caller = get_caller_address();
             let owner = self.owner.read();
             assert(caller == owner, 'Only owner can register items');
+            assert(item_name == "", 'Item name cannot be empty');
 
             self.register.write(item_name, true);
 
