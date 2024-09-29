@@ -3,6 +3,7 @@ trait IAuction<T> {
     fn register_item(ref self: T, item_name: ByteArray);
     fn unregister_item(ref self: T, item_name: ByteArray);
     fn bid(ref self: T, item_name: ByteArray, amount: u32);
+    fn get_bid(self: @T, item_name: ByteArray) -> u32;
     fn get_highest_bidder(self: @T, item_name: ByteArray) -> u32;
     fn is_registered(self: @T, item_name: ByteArray) -> bool;
 }
@@ -90,6 +91,15 @@ pub mod Auction {
             self.allBids.write(amount);
 
             self.emit(ItemBid { item_name, amount });
+        }
+
+        fn get_bid(self: @ContractState, item_name: ByteArray) -> u32 {
+            let caller = get_caller_address();
+            let owner = self.owner.read();
+            assert(caller == owner, 'Only owner can get bid');
+
+            let bid = self.bid.read(item_name);
+            bid
         }
 
         fn get_highest_bidder(self: @ContractState, item_name: ByteArray) -> u32 {

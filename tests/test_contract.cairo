@@ -20,12 +20,12 @@ fn test_register_item() {
 
     let dispatcher = IAuctionDispatcher { contract_address };
 
-    let before_register = dispatcher.is_registered("hello");
+    let before_register = dispatcher.is_registered("strk");
     assert(before_register == false, 'Item should not be registered');
 
-    dispatcher.register_item("hello");
+    dispatcher.register_item("strk");
 
-    let after_register = dispatcher.is_registered("hello");
+    let after_register = dispatcher.is_registered("strk");
     assert(after_register == true, 'Item should be registered');
 }
 
@@ -35,10 +35,86 @@ fn test_register_item_with_empty_name() {
 
     let dispatcher = IAuctionDispatcher { contract_address };
 
-    let register = dispatcher.register_item("");
+    dispatcher.register_item("");
 
     let test = dispatcher.is_registered("");
     assert(test == false, 'Name cannot be empty');
+}
+
+#[test]
+fn test_unregister_item() {
+    let contract_address = deploy_contract("Auction");
+
+    let dispatcher = IAuctionDispatcher { contract_address };
+
+    dispatcher.register_item("strk");
+
+    let before_unregister = dispatcher.is_registered("strk");
+    assert(before_unregister == true, 'Item should be registered');
+
+    dispatcher.unregister_item("strk");
+
+    let after_unregister = dispatcher.is_registered("strk");
+    assert(after_unregister == false, 'Item should not be registered');
+}
+
+#[test]
+fn test_bid() {
+    let contract_address = deploy_contract("Auction");
+
+    let dispatcher = IAuctionDispatcher { contract_address };
+
+    dispatcher.register_item("strk");
+    dispatcher.bid("strk", 10);
+    let bid_value = dispatcher.get_bid("strk");
+    assert(bid_value == 10, 'Bid should be 10');
+}
+
+#[test]
+fn test_bid_with_zero_value() {
+    let contract_address = deploy_contract("Auction");
+
+    let dispatcher = IAuctionDispatcher { contract_address };
+
+    dispatcher.register_item("strk");
+    dispatcher.bid("strk", 0);
+    let bid_value = dispatcher.get_bid("strk");
+    assert(bid_value != 0, 'Bid cannot be 0');
+}
+
+#[test]
+fn test_bid_with_negative_value() {
+    let contract_address = deploy_contract("Auction");
+
+    let dispatcher = IAuctionDispatcher { contract_address };
+
+    dispatcher.register_item("strk");
+    dispatcher.bid("strk", -15);
+    let bid_value = dispatcher.get_bid("strk");
+    assert(bid_value > 0, 'Bid cannot be a negative value');
+}
+
+#[test]
+fn test_get_highest_bidder() {
+    let contract_address = deploy_contract("Auction");
+
+    let dispatcher = IAuctionDispatcher { contract_address };
+
+    dispatcher.register_item("strk");
+    dispatcher.bid("strk", 15);
+
+    dispatcher.register_item("btc")
+    dispatcher.bid("btc", 200);
+
+    dispatcher.register_item("eth")
+    dispatcher.bid("eth", 50);
+
+    let bid_value_strk = dispatcher.get_highest_bidder("strk");
+    let bid_value_btc = dispatcher.get_highest_bidder("btc");
+    let bid_value_eth = dispatcher.get_highest_bidder("eth");
+
+    assert(bid_value_strk == 15, 'Bid should be 200');
+    assert(bid_value_eth == 50, 'Bid should be 200');
 }
 
 // #[test]
