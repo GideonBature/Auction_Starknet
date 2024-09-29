@@ -1,0 +1,6 @@
+Declaring Cairo 1 class: 0x06d8d18296f09ee07b3fc5c602e8d148e0cbe31d4b3d6c1032399355fa8fc5c1
+Compiling Sierra class to CASM with compiler version 2.8.2...
+CASM class hash: 0x023faf8f195a6a9ec59ef14cb76207558575df6add15f91044e2900d8b3e0ea3
+Contract declaration transaction: 0x04a30d12d7be4319298ce4d9c08ddfc319f1137d06177a3c6f4e288f1c165e3e
+Class hash declared:
+0x06d8d18296f09ee07b3fc5c602e8d148e0cbe31d4b3d6c1032399355fa8fc5c1
