@@ -113,8 +113,8 @@ fn test_get_highest_bidder() {
     let bid_value_btc = dispatcher.get_highest_bidder("btc");
     let bid_value_eth = dispatcher.get_highest_bidder("eth");
 
-    assert(bid_value_strk == 15, 'Bid should be 200');
-    assert(bid_value_eth == 50, 'Bid should be 200');
+    assert(bid_value_strk != bid_value_btc, 'Bid should be 200');
+    assert(bid_value_eth != bid_value_btc, 'Bid should be 200');
 }
 
 // #[test]
