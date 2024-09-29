@@ -3,10 +3,10 @@ use starknet::ContractAddress;
 
 use snforge_std::{declare, ContractClassTrait, DeclareResultTrait};
 
-use super::IAuctionSafeDispatcher;
-use super::IAuctionSafeDispatcherTrait;
-use super::IAuctionDispatcher;
-use super::IAuctionDispatcherTrait;
+use auction::IAuctionSafeDispatcher;
+use auction::IAuctionSafeDispatcherTrait;
+use auction::IAuctionDispatcher;
+use auction::IAuctionDispatcherTrait;
 
 fn deploy_contract(name: ByteArray) -> ContractAddress {
     let contract = declare(name).unwrap().contract_class();
